@@ -1,0 +1,268 @@
+在进行apt-get update操作时，出现如下的错误信息：
+4aptk6im-razbuw4
+
+v0idp0int-eof # apt-get update 
+E: 无法获得锁 /var/lib/apt/lists/lock - open (11: Resource temporarily unavailable)
+E: 无法对目录 /var/lib/apt/lists/ 加锁
+这个问题是的意思是用于apt-get操作时的lock(应该是用于互斥的锁)，出现了不能够得到锁的问题，针对此问题，如何解决呢？
+"C:\Python\Python36\python.exe" 
+可以以下命令进行操作，
+
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/cache/apt/archives/lock
+然后，再次进行apt-get update操作，应该就可以了。
+
+无法获得锁 /var/lib/dpkg/lock - open (11: 资源暂时不可用)
+    无法锁定管理目录(/var/lib/dpkg/)，是否有其他进程正占用它？
+ 
+解决办法如下：
+1。终端输入 ps  aux ，列出进程。找到含有apt-get的进程，直接sudo kill PID。
+
+2。强制解锁,命令
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+
+先搜索所有运行着的线程
+
+
+
+ps -A | grep apt-get1
+
+
+你会得到类似下面的输出：
+
+
+
+
+root        752  0.0  0.0   4508  1628 ?        Ss   01:13   0:00  /bin/sh/usr/lib/apt/apt.systemd.daily
+
+
+_apt       2098  0.1  0.1  49572  5524 ?        S    01:18   0:06 /usr/lib/apt/methods/http
+
+
+aobo       4425  0.0  0.0  18484   980 pts/1    S+   02:13   0:00 grep --color=auto apt
+
+
+第2列就是线程号(kill processnumber)。我们将apt相关的进程给关闭掉，需要使用sudo权限：
+
+
+
+
+# sudo kill processnumber
+sudo kill 2098
+
+---------------------
+
+本文来自 AoboSir 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/github_35160620/article/details/51933605?utm_source=copy 
+
+
+错误笔记： Could not get lock /var/lib/dpkg/lock - open (11: Resource temporarily unavailable) E: Unable to lock the administration di
+解决方案：
+
+其实这是因为有另外一个程序在运行，导致锁不可用。原因可能是上次运行更新或安装没有正常完成。解决办法是杀死此进程
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+
+ 
+但是这样不能解决问题：可能还会出现问题，解决方案：
+
+1、sudo dpkg --configure -a
+2、sudo apt-get update
+
+
+Ubuntu vim 现实行号
+第一步、安装vim 命令为：sudo apt-get install vim
+
+第二步、更改vim的配置文件etc/vim命令为：
+
+(1)cd /etc/vim  (2)sudo gedit vimrc
+
+第三步、在vimrc最后令起一行插入下面内容
+
+syntax on
+set tabstop=4
+set shiftwidth=4
+set autoindent
+set cindent
+set cinoptions={0,1s,t0,n-2,p2s,(03s,=.5s,>1s,=1s,:1s
+set nu
+set softtabstop=4
+
+第四步、保存之后就结束了，然后用vim打开 .c类型的文件就会显示高亮以及不同的语法颜色不同的效果
+
+
+
+
+安装了pip的话 pip uninstall scrapy 卸载scrapy
+
+安装Ubuntu scrapy
+1、sudo apt install python-pip
+2、sudo apt-get install python-pip
+3、sudo apt-get install python-dev
+sudo apt-get install libevent-dev
+sudo apt-get install libssl-dev  #在阿里云上配置的时候发现还要安这个 
+4、sudo pip install scrapy
+5、验证：scrapy version
+
+如果你是指他的动画效果的话,试试 sudo apt install gnome-shell-extension-impatience禁用全局动画
+
+
+ubuntu出现：
+No protocol specified
+Unable to init server: Could not connect: Connection refused
+
+(gedit:4773): Gtk-WARNING **: cannot open display: :0
+错误时，即sudo 不能使用GUI程序
+1、. ~/.bashrc
+2、xhost + 
+可能3、source ~/.bashrc 
+事实上第二步之后就好了
+
+PyCharm LicenseServer：
+
+http://www.yuanzhaoyi.cn:1017
+
+http://www.yuanzhaoyi.cn:1027
+选择 Activate new license with License server （用license server 激活）
+在 License sever address 处填入 https://jetlicense.nss.im/
+点击 Activate 进行认证
+
+1. 在Linux和OS X系统中检查是否安装了pip
+打开一个终端窗口，并执行如下命令：
+$ pip --version
+2.在Windows系统中检查是否安装了pip
+打开一个终端窗口，并执行如下命令：
+$ python -m pip --version
+
+
+
+安装pygame的功能
+$ sudo apt-get install python-pygame
+执行下面的命令来安装Pygame依赖的库（如果你开始终端会话时使用的是命令python3.5 ，请将python3-dev 替换为python3.5-dev ）：
+$ sudo apt-get install python3-dev mercurial
+$ sudo apt-get install libsdl-image1.2-dev libsdl2-dev libsdl-ttf2.0-dev
+这将安装运行《外星人入侵》时需要的库。如果你要启用Pygame的一些高级功能，如添加声音的功能，可安装下面这些额外的库：
+$ sudo apt-get install libsdl-mixer1.2-dev libportmidi-dev
+$ sudo apt-get install libswscale-dev libsmpeg-dev libavformat-dev libavcodec-dev
+$ sudo apt-get install python-numpy
+
+cent os 问题
+网络问题：
+	cd /etc/sysconfig/network-scripts
+	ls
+	vi ifcfg-ens33
+修改 ONBOOT=yes
+service network restart
+
+
+CentOS 7 安装Python3以及pip3
+一、添加epel源
+
+yum install epel-release
+
+二、安装Python3.4
+
+yum install python34
+
+三、安装pip3
+
+yum install python34-setuptools
+
+easy_install-3.4 pip
+
+之后就可以使用pip3了，如：
+
+pip3 install numpy
+
+
+
+ubuntu突然不能上网
+sudo service network-manager stop
+sudo rm /var/lib/NetworkManager/NetworkManager.state 
+sudo service network-manager start
+
+
+mysql 通过sudo才能登陆，免sudo修改密码登陆
+
+update mysql.user set authentication_string=PASSWORD('wb135936'), plugin='mysql_native_password' where user='root';
+
+flush privileges;
+
+1. sudo apt-get install mysql-server
+ 
+2. sudo apt-get install mysql-client
+ 
+3. sudo apt-get install libmysqlclient-dev
+
+
+sudo gedit /etc/mysql/debian.cnf
+2.找到用户名，密码 ，使用此账号登录mysql
+用户名：debian-sys-maint
+
+密码：xedvSNKdLavjuEWV
+
+登录：mysql -udebian-sys-maint -pxedvSNKdLavjuEWV
+
+3.修改root用户的的密码
+
+这里是关键点，由于mysql5.7没有password字段，密码存储在authentication_string字段中，password()方法还能用
+
+在mysql中执行下面语句修改密码
+
+show databases；
+ 
+use mysql;
+  
+update user set authentication_string=PASSWORD("自定义密码") where user='root';
+  
+update user set plugin="mysql_native_password";
+  
+flush privileges;
+  
+quit;
+
+4.修改完密码，需要重启mysql
+
+/etc/init.d/mysql restart;
+
+ 
+
+再次登录
+mysql -u root -p 密码;
+
+
+
+用SecureCRT连接虚拟机中的Linux系统(Ubuntu)
+ssh usrname@localhost
+sudo apt-get install openssh-server
+netstat -nat | grep 22
+
+关闭掉防火墙　　sudo ufw disable
+
+
+永久修改如下：
+
+xrandr查询分辨率
+
+先用cvt 1360 768 获取当前的Modeline信息，然后新建文件/etc/X11/xorg.conf，内容如下，重启即可生效
+Section "Monitor"
+Identifier "Configured Monitor"
+Modeline "1360x768_60.00" 84.75 1360 1432 1568 1776 768 771 781 798 -hsync +
+vsync
+Option "PreferredMode" "1360x768_60.00"
+EndSection
+Section "Screen"
+Identifier "Default Screen"
+Monitor "Configured Monitor"
+Device "Configured Video Device"
+EndSection
+Section "Device"
+Identifier "Configured Video Device"
+EndSection
+
+
+
+
+
+
+	
